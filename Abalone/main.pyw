@@ -39,7 +39,7 @@ class App():
     comboGraphs = ttk.Combobox(
     frame,
     state='readonly',
-    values=['Histograma','Diagrama de caja','Disperción','Normalización']    
+    values=['Histograma','Diagrama de caja','Dispersión','Normalización']    
     )
 
     # Definicion de las variables de entrada y los campos de seleccion
@@ -254,16 +254,40 @@ class App():
     def graph(self):
         
         selectedInput = self.checkSelectedInput()
-        
-        if (self.comboGraphs.get() == 'Histograma'):
-            if (len(selectedInput) == 1):
+        incoherence = False
+
+        if (len(selectedInput) == 1):
+
+            if (self.comboGraphs.get() == 'Histograma'):
                 plot.hist(data[selectedInput[0]])
-                plot.title(selectedInput[0])
-                plot.xlabel('Valor de los datos')
-                plot.ylabel('Cantidad de los datos')
-                plot.show()
+
+            elif (self.comboGraphs.get() == 'Diagrama de caja'):
+                plot.boxplot(data[selectedInput[0]])
+
+            elif (self.comboGraphs.get() == 'Normalización'):
+                graph = plot.figure()
+                ax = graph.add_subplot(111)
+                stats.probplot(data[selectedInput[0]], dist=stats.norm, sparams=(6,), plot=ax)
+            
             else:
-                self.errorWindow('Error','Para graficar un histograma se requiere que \n únicamente tengas una variable de entrada seleccionada ')
+                incoherence = True
+
+        elif (len(selectedInput) == 2):
+
+            if (self.comboGraphs.get() == 'Dispersión'):
+                plot.scatter(data[selectedInput[0]], data[selectedInput[1]])
+
+            else:
+                incoherence = True
+    
+        if incoherence == True:
+            self.errorWindow('Error',f'Recuerda, para realizar un histograma, un diagrama de caja o un gráfico de normalización se requiere \n únicamente que tengas una variable de entrada seleccionada, pero, para realizar un gráfico de dispersión \n se requiere que tengas dos variables de entrada seleccionadas.')
+            return
+
+        plot.title(self.comboGraphs.get())
+        plot.xlabel('Valor de los datos')
+        plot.ylabel('Cantidad de los datos')
+        plot.show()
 
 # Llamado a la accion de la aplicacion
 
