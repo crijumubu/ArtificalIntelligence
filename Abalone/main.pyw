@@ -3,22 +3,71 @@
 
 import tkinter as tk
 from tkinter import ttk
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plot
+from scipy import stats
+
+file = 'abalone.csv'
+
+data = pd.read_csv(file)
+
+# First method
+
+data.columns = ["Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings"]
 
 # Definicion de funciones
 
-def openWindow():
-    newWindow = tk.Toplevel(root)
-    newWindow.resizable(False, False)
+def errorWindow(message):
+    newgraphWindow = tk.Toplevel(root)
+    newgraphWindow.resizable(False, False)
+    newgraphWindow.title('Error')
     
-    frame = tk.Frame(newWindow, width='1080', height='650')
+    frame = tk.Frame(newgraphWindow, width='1080', height='650')
     frame.pack()
     frame['bg'] = '#faf9f9' 
     
-    lbl = tk.Label(frame, text='Graficación de los datos', bg='#faf9f9', font=(16))
+    lbl = tk.Label(frame, text=message, bg='#faf9f9', font=(16))
     lbl.grid(row=0)
     
-    btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9' ,activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newWindow.destroy())
+    btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy())
     btnClose.grid(row=1, pady=10)
+
+def checkSelectedInput():
+    selectedInput = []
+    
+    if varInputLenght.get() == 1:
+        selectedInput.append('Length')
+    if varInputDiameter.get() == 1:
+        selectedInput.append('Diameter')
+    if varInputHeight.get() == 1:
+        selectedInput.append('Height')
+    if varInputWholeWeight.get() == 1:
+        selectedInput.append('Whole weight')
+    if varInputShuckedWeight.get() == 1:
+        selectedInput.append('Shucked weight')
+    if varInputVisceraWeight.get() == 1:
+        selectedInput.append('Viscera weight')
+    if varInputShellWeight.get() == 1:
+        selectedInput.append('Shell weight')
+    if varInputRings.get() == 1:
+        selectedInput.append('Rings')
+    
+    return selectedInput
+
+def graph():
+    
+    selectedInput = checkSelectedInput()
+    
+    if (comboGraphs.get() == 'Histograma'):
+        if (len(selectedInput) == 1):
+            plot.hist(data[selectedInput[0]])
+            plot.title(selectedInput[0])
+            plot.xlabel('Valor de los datos')
+            plot.ylabel('Cantidad de los datos')
+            plot.show()
+        else:
+            errorWindow('Para graficar un histograma se requiere que \n únicamente tengas una variable de entrada seleccionada ')
 
 # Definicion del root
 
@@ -198,7 +247,7 @@ btnregression.grid(row=12, column=1, sticky='WE', padx=5, pady=10)
 
 # Boton de graficar
 
-btngraph = tk.Button(frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=openWindow)
+btngraph = tk.Button(frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=graph)
 btngraph.grid(row=12, column=2, sticky='WE', padx=5, pady=10)
 
 # Espera a la accion
