@@ -3,44 +3,20 @@
 
 # Importacion de bibliotecas y paquetes necesarios para la ejecucion del aplicativo
 
-from distutils.cmd import Command
-import pandas as pd
-import tkinter as tk
 import matplotlib.pyplot as plot
+import tkinter as tk
 import numpy as np
+import dataSet as ds
 from tkinter import END, ttk
 from scipy import stats
 
-# Definicion de la clase para el dataset
-
-class DataSet():
-
-    fileRelativeRoute = ''
-
-    data = pd.DataFrame()
-
-    copyData = pd.DataFrame()
-
-    def __init__(self, fileRoute):
-        
-        self.fileRelativeRoute = fileRoute
-
-        self.data = pd.read_csv(self.fileRelativeRoute)
-
-        self.copyData = pd.read_csv(self.fileRelativeRoute)
-
-    def setColums(self, listColumns):
-
-        self.data.columns = listColumns
-        self.copyData.columns = listColumns
-
 # Definicion de la clase de la aplicacion
 
-class App():
+class main():
     
     # Importacion del dataset del abalone mediante la creacion de un objeto de la clase DataSet
 
-    dataSetObject = DataSet('Abalone/abalone.csv')
+    dataSetObject = ds.dataSet('Abalone/abalone.csv')
     dataSetObject.setColums(["Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings"])
 
     # Definicion del root y del frame
@@ -318,7 +294,7 @@ class App():
         plot.ylabel('Cantidad de los datos')
         plot.show()
 
-    # Metodo para eliminar los datos atypicalos
+    # Metodo para eliminar los datos atipicos
     
     def removeAtypics(self):
         
@@ -358,5 +334,5 @@ class App():
 # Llamado a la accion de la aplicacion
 
 if __name__ == "__main__":
-    app = App()
+    app = main()
     app.root.mainloop()
