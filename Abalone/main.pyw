@@ -3,26 +3,46 @@
 
 # Importacion de bibliotecas y paquetes necesarios para la ejecucion del aplicativo
 
+from distutils.cmd import Command
 import pandas as pd
 import tkinter as tk
 import matplotlib.pyplot as plot
 import numpy as np
-from tkinter import ttk
+from tkinter import END, ttk
 from scipy import stats
 
-# Importacion del dataset del abalone
+# Definicion de la clase para el dataset
 
-file = 'abalone.csv'
-data = pd.read_csv(file)
+class DataSet():
 
-# Preparacion de los datos del abalone 
+    fileRelativeRoute = ''
 
-data.columns = ["Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings"]
+    data = pd.DataFrame()
+
+    copyData = pd.DataFrame()
+
+    def __init__(self, fileRoute):
+        
+        self.fileRelativeRoute = fileRoute
+
+        self.data = pd.read_csv(self.fileRelativeRoute)
+
+        self.copyData = pd.read_csv(self.fileRelativeRoute)
+
+    def setColums(self, listColumns):
+
+        self.data.columns = listColumns
+        self.copyData.columns = listColumns
 
 # Definicion de la clase de la aplicacion
 
 class App():
     
+    # Importacion del dataset del abalone mediante la creacion de un objeto de la clase DataSet
+
+    dataSetObject = DataSet('Abalone/abalone.csv')
+    dataSetObject.setColums(["Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings"])
+
     # Definicion del root y del frame
 
     root = tk.Tk()
@@ -66,9 +86,9 @@ class App():
 
     # Datos atipicos
 
-    atipicLabel = tk.Label(frame, text='Valor del factor de alpha para los atípicos:', bg='#faf9f9')
-    atipicInput = ttk.Entry(frame)
-    btnAtipic = tk.Button(frame, text='Eliminar atípicos', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
+    atypicalLabel = tk.Label(frame, text='Valor del factor de alpha para los atípicos:', bg='#faf9f9')
+    atypicalInput = ttk.Entry(frame)
+    btnAtypical = tk.Button(frame, text='Eliminar atípicos', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
 
     # Regresion
 
@@ -114,6 +134,14 @@ class App():
     chkbtnOutputRegressionVisceraWeight = tk.Checkbutton(frame, text=' Peso de la víscera', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionVisceraWeight, onvalue=1, offvalue=0)
     chkbtnOutputRegressionShellWeight = tk.Checkbutton(frame, text=' Peso del caparazón', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionShellWeight, onvalue=1, offvalue=0)
     chkbtnOutputRegressionRings = tk.Checkbutton(frame, text=' Número de anillos', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionRings, onvalue=1, offvalue=0)
+
+    # Definicion del boton de realizar la regresion
+    
+    btnregression = tk.Button(frame, text='Obtener regresión', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
+
+    # Definicion del boton de graficar
+
+    btngraph = tk.Button(frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
 
     def __init__(self):
         super().__init__()
@@ -165,13 +193,14 @@ class App():
         self.chkbtnInputShellWeight.grid(row=4, column=1, sticky='W')
         self.chkbtnInputRings.grid(row=4, column=2, sticky='W')
 
-        # Datos atipicos - Ubicacion en el grid
+        # Datos atipicos, ubicacion en el grid y definicion del comando de ejecucion para el boton
 
-        self.atipicLabel.grid(row=5, column=0, columnspan=2, sticky='NW', pady=15)
+        self.atypicalLabel.grid(row=5, column=0, columnspan=2, sticky='NW', pady=15)
 
-        self.atipicInput.grid(row=5, column=2, sticky='W', padx=10)
+        self.atypicalInput.grid(row=5, column=2, sticky='W', padx=10)
 
-        self.btnAtipic.grid(row=5, column=3, pady=15)
+        self.btnAtypical.grid(row=5, column=3, pady=15)
+        self.btnAtypical.config(command=self.removeAtypics)
 
         # Variables de entrada y campos de seleccion para la regresion - Ubicacion en el grid
 
@@ -198,17 +227,16 @@ class App():
         self.chkbtnOutputRegressionShellWeight.grid(row=11, column=1, sticky='W')
         self.chkbtnOutputRegressionRings.grid(row=11, column=2, sticky='W')
 
-        # Definicion del boton de realizar la regresion y ubicacion en el grid
+        # Definicion del comando a ejecutar para el boton de realizar la regresion y ubicacion en el grid
 
-        btnregression = tk.Button(self.frame, text='Obtener regresión', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
-        btnregression.grid(row=12, column=1, sticky='WE', padx=5, pady=10)
+        self.btnregression.grid(row=12, column=1, sticky='WE', padx=5, pady=10)
 
-        # Definicion del boton de graficar y ubicacion en el grid
+        # Definicion del comando a ejecutar para el boton de graficar y bicacion en el grid
 
-        btngraph = tk.Button(self.frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=self.graph)
-        btngraph.grid(row=12, column=2, sticky='WE', padx=5, pady=10)
+        self.btngraph.grid(row=12, column=2, sticky='WE', padx=5, pady=10)
+        self.btngraph.config(command=self.graph)
 
-    #Metodo de generacion de ventana emergente para mostrar alertas u errores
+    # Metodo de generacion de ventana emergente para mostrar alertas u errores
 
     def errorWindow(self, title, message):
         newgraphWindow = tk.Toplevel(self.root)
@@ -225,7 +253,7 @@ class App():
         btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy())
         btnClose.grid(row=1, pady=10)
     
-    #Metodo de identificacion de las variables seleccionadas
+    # Metodo de identificacion de las variables seleccionadas
 
     def checkSelectedInput(self):
         selectedInput = []
@@ -249,25 +277,26 @@ class App():
         
         return selectedInput
 
-    #Metodo de graficacion de los datos
+    # Metodo de graficacion de los datos
 
     def graph(self):
         
+
         selectedInput = self.checkSelectedInput()
         incoherence = False
 
         if (len(selectedInput) == 1):
 
             if (self.comboGraphs.get() == 'Histograma'):
-                plot.hist(data[selectedInput[0]])
+                plot.hist(self.dataSetObject.data[selectedInput[0]])
 
             elif (self.comboGraphs.get() == 'Diagrama de caja'):
-                plot.boxplot(data[selectedInput[0]])
+                plot.boxplot(self.dataSetObject.data[selectedInput[0]])
 
             elif (self.comboGraphs.get() == 'Normalización'):
                 graph = plot.figure()
                 ax = graph.add_subplot(111)
-                stats.probplot(data[selectedInput[0]], dist=stats.norm, sparams=(6,), plot=ax)
+                stats.probplot(self.dataSetObject.data[selectedInput[0]], dist=stats.norm, sparams=(6,), plot=ax)
             
             else:
                 incoherence = True
@@ -275,7 +304,7 @@ class App():
         elif (len(selectedInput) == 2):
 
             if (self.comboGraphs.get() == 'Dispersión'):
-                plot.scatter(data[selectedInput[0]], data[selectedInput[1]])
+                plot.scatter(self.dataSetObject.data[selectedInput[0]], self.dataSetObject.data[selectedInput[1]])
 
             else:
                 incoherence = True
@@ -288,6 +317,43 @@ class App():
         plot.xlabel('Valor de los datos')
         plot.ylabel('Cantidad de los datos')
         plot.show()
+
+    # Metodo para eliminar los datos atypicalos
+    
+    def removeAtypics(self):
+        
+        if (self.btnAtypical['text'] == 'Eliminar atípicos'):
+
+            alpha = self.atypicalInput.get()
+
+            maxlimits = []
+            minlimits = []
+            
+            try:
+                for i in range (1, len(self.dataSetObject.data.columns)):
+                    q75 = np.quantile(self.dataSetObject.data[self.dataSetObject.data.columns[i]],.75)
+                    q25 = np.quantile(self.dataSetObject.data[self.dataSetObject.data.columns[i]],.25)
+                    intr_qr = q75 - q25
+
+                    maxlimits.append(q75 + (float(alpha) * intr_qr))
+                    minlimits.append(q25 - (float(alpha) * intr_qr))
+
+                self.dataSetObject.data = self.dataSetObject.copyData[(self.dataSetObject.copyData['Length'] < maxlimits[0]) & (self.dataSetObject.copyData['Length'] > minlimits[0]) & (self.dataSetObject.copyData['Diameter'] < maxlimits[1]) & (self.dataSetObject.copyData['Diameter'] > minlimits[1]) & (self.dataSetObject.copyData['Height'] < maxlimits[2]) & (self.dataSetObject.copyData['Height'] > minlimits[2]) & (self.dataSetObject.copyData['Whole weight'] < maxlimits[3]) & (self.dataSetObject.copyData['Whole weight'] > minlimits[3]) & (self.dataSetObject.copyData['Shucked weight'] < maxlimits[4]) & (self.dataSetObject.copyData['Shucked weight'] > minlimits[4]) & (self.dataSetObject.copyData['Viscera weight'] < maxlimits[5]) & (self.dataSetObject.copyData['Viscera weight'] > minlimits[5]) & (self.dataSetObject.copyData['Shell weight'] < maxlimits[6]) & (self.dataSetObject.copyData['Shell weight'] > minlimits[6]) & (self.dataSetObject.copyData['Rings'] < maxlimits[7]) & (self.dataSetObject.copyData['Rings'] > minlimits[7])]
+                self.errorWindow('Solicitud exitosa', 'La remosión de los datos atípicos se ha realizado de manera exitosa')
+                self.btnAtypical['text'] = 'Restaurar atípicos'
+
+            except:
+                self.errorWindow('Error','Ups, algo ha salido mal, revisa que el valor de alpha sea valido')
+                return
+
+        else:
+
+            self.dataSetObject.data = self.dataSetObject.copyData.copy()
+            self.errorWindow('Solicitud exitosa', 'La restauración de los datos atípicos se ha realizado de manera exitosa')
+            self.btnAtypical['text'] = 'Eliminar atípicos'
+        
+
+        self.atypicalInput.delete(0,END)
 
 # Llamado a la accion de la aplicacion
 
