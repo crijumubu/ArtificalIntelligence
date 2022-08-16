@@ -312,6 +312,107 @@ class main():
 
         self.atypicalInput.delete(0,tk.END)
 
+
+    def summary(self):
+        
+        newgraphWindow = tk.Toplevel(self.root)
+        newgraphWindow.resizable(False, False)
+        
+        frame = tk.Frame(newgraphWindow)
+        frame.pack()
+        frame['bg'] = '#faf9f9'
+
+        #generalInfo = []
+        #info = []
+
+        # Label de encabezados superiores de la tabla
+
+        content = tk.Label(frame, text='Media', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=2, padx=10, sticky='WE')
+
+        content = tk.Label(frame, text='Mediana', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=3, padx=10, sticky='WE')
+
+        content = tk.Label(frame, text='Moda', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=4, padx=10, sticky='WE')
+
+        content = tk.Label(frame, text='Curtosis', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=5, padx=10, sticky='WE')
+
+        content = tk.Label(frame, text='Oblicuidad', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=6, padx=10, sticky='WE')
+
+        content = tk.Label(frame, text='Relación', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=1, column=7, padx=10, sticky='WE')
+
+        # Label de encabezados laterales de la tabla
+
+        content = tk.Label(frame, text='Longitud', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=2, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Diametro', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=3, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Altura', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=4, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Peso completo', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=5, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Peso de la concha', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=6, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Peso de la víscera', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=7, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Peso del caparazón', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=8, column=1, padx=10, sticky='W')
+
+        content = tk.Label(frame, text='Número de anillos', bg='#faf9f9', font=('Segoe UI', 12))
+        content.grid(row=9, column=1, padx=10, sticky='W')
+
+        for i in range(1, len(self.dataSetObject.getColumns())):
+            
+            mean = round(self.dataSetObject.data[self.dataSetObject.getColumns()[i]].mean(),5)
+            median = round(self.dataSetObject.data[self.dataSetObject.getColumns()[i]].median(),5)
+            mode = round(self.dataSetObject.data[self.dataSetObject.getColumns()[i]].mode(),5)
+            kurtosis = round(self.dataSetObject.data[self.dataSetObject.getColumns()[i]].kurtosis(),5)
+            skewness = round(self.dataSetObject.data[self.dataSetObject.getColumns()[i]].skew(),5)
+
+            for j in range(1, 7):
+
+                content = tk.Label(frame, bg='#faf9f9', font=('Segoe UI', 12))
+                content.grid(row=i+1, column=j+1, sticky='WE')
+                relationship = ''
+
+                if (j == 1):
+                    content.config(text = mean)
+                elif (j == 2):
+                    content.config(text = median)
+                elif (j == 3):
+                    stringMode = ''
+                    for k in mode:
+                        stringMode += str(k) + ', '
+                    content.config(text = stringMode[0:len(stringMode)-2])
+                elif (j == 4):
+                    content.config(text = kurtosis)
+                elif (j == 5):
+                    content.config(text = skewness)
+                elif (j == 6):
+                    if (mean == median and  median == mode[0]):
+                        relationship = 'Distribución simétrica'
+                    elif (mean > median):
+                        relationship = 'Asimetría positiva'
+                    elif (mean < median):
+                        relationship = 'Asimetría negativa'
+                    content.config(text = relationship)
+
+        lbl = tk.Label(frame, text='Resumen estadístico', bg='#faf9f9', font=('Segoe UI', 18, 'bold'))
+        lbl.grid(row=0, column=1, columnspan=7, sticky='WE', pady=5)  
+
+        btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy(), font=('Segoe UI', 10))
+        btnClose.grid(row=10, column=4, pady=10, sticky='E')
+
 # Llamado a la accion de la aplicacion
 
 if __name__ == "__main__":
