@@ -27,3 +27,6 @@ class dataSet():
 
         self.data.columns = listColumns
         self.copyData.columns = listColumns
+
+    def getColumns(self):
+        return self.data.columns

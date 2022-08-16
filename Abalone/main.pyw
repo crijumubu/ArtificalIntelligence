@@ -3,12 +3,13 @@
 
 # Importacion de bibliotecas y paquetes necesarios para la ejecucion del aplicativo
 
-import matplotlib.pyplot as plot
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+from tkinter import ttk
+from scipy import stats
 import tkinter as tk
 import numpy as np
-import dataSet as ds
-from tkinter import END, ttk
-from scipy import stats
+import dataset as ds
 
 # Definicion de la clase de la aplicacion
 
@@ -22,25 +23,26 @@ class main():
     # Definicion del root y del frame
 
     root = tk.Tk()
-    frame = tk.Frame(root, width='1080', height='650')
+    frame = tk.Frame(root)
 
     # Titulo principal
 
-    title = tk.Label(frame, text='Abalone Data Analysys', bg='#faf9f9', font=(16))
+    title = tk.Label(frame, text='Abalone Data Analysys', bg='#faf9f9', font=('Segoe UI', 18, 'bold'))
 
     # Despliegue del tipo de graficas
 
-    comboLabel = tk.Label(frame, text='Tipo de gráfica:', bg='#faf9f9')
+    comboLabel = tk.Label(frame, text='Tipo de gráfica:', bg='#faf9f9', font=('Segoe UI', 10))
     comboStyle = ttk.Style()
     comboGraphs = ttk.Combobox(
     frame,
     state='readonly',
-    values=['Histograma','Diagrama de caja','Dispersión','Normalización']    
+    font=('Segoe UI', 10),
+    values=['Histograma','Diagrama de caja','Dispersión','Normalización']
     )
 
     # Definicion de las variables de entrada y los campos de seleccion
 
-    varLabel = tk.Label(frame, text='Variables de entrada:', bg='#faf9f9')
+    varLabel = tk.Label(frame, text='Variables de entrada:', bg='#faf9f9', font=('Segoe UI', 10))
 
     varInputLenght = tk.IntVar()
     varInputDiameter = tk.IntVar()
@@ -62,62 +64,17 @@ class main():
 
     # Datos atipicos
 
-    atypicalLabel = tk.Label(frame, text='Valor del factor de alpha para los atípicos:', bg='#faf9f9')
+    atypicalLabel = tk.Label(frame, text='Valor del factor de alpha para los atípicos:', bg='#faf9f9', font=('Segoe UI', 10))
     atypicalInput = ttk.Entry(frame)
-    btnAtypical = tk.Button(frame, text='Eliminar atípicos', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
+    btnAtypical = tk.Button(frame, text='Eliminar atípicos', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', font=('Segoe UI', 10))
 
-    # Regresion
-
-    regressionLabel = tk.Label(frame, text='Entradas de la regresión:', bg='#faf9f9')
-
-    # Definicion de las variables de entrada y los campos de seleccion para la regresion
-
-    varInputRegressionLenght = tk.IntVar()
-    varInputRegressionDiameter = tk.IntVar()
-    varInputRegressionHeight = tk.IntVar()
-    varInputRegressionWholeWeight = tk.IntVar()
-    varInputRegressionShuckedWeight = tk.IntVar()
-    varInputRegressionVisceraWeight = tk.IntVar()
-    varInputRegressionShellWeight = tk.IntVar()
-    varInputRegressionRings = tk.IntVar()
-
-    chkbtnInputRegressionLenght = tk.Checkbutton(frame, text=' Longitud', bg='#faf9f9', highlightbackground = '#faf9f9', activebackground='#faf9f9', variable=varInputRegressionLenght, onvalue=1, offvalue=0)
-    chkbtnInputRegressionDiameter = tk.Checkbutton(frame, text=' Diametro', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionDiameter, onvalue=1, offvalue=0)
-    chkbtnInputRegressionHeight = tk.Checkbutton(frame, text=' Altura', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionHeight, onvalue=1, offvalue=0)
-    chkbtnInputRegressionWholeWeight = tk.Checkbutton(frame, text=' Peso completo', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionWholeWeight, onvalue=1, offvalue=0)
-    chkbtnInputRegressionShuckedWeight = tk.Checkbutton(frame, text=' Peso de la concha', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionShuckedWeight, onvalue=1, offvalue=0)
-    chkbtnInputRegressionVisceraWeight = tk.Checkbutton(frame, text=' Peso de la víscera', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionVisceraWeight, onvalue=1, offvalue=0)
-    chkbtnInputRegressionShellWeight = tk.Checkbutton(frame, text=' Peso del caparazón', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionShellWeight, onvalue=1, offvalue=0)
-    chkbtnInputRegressionRings = tk.Checkbutton(frame, text=' Número de anillos', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varInputRegressionRings, onvalue=1, offvalue=0)
-
-    # Definicion de las variables de salida y los campos de seleccion para la regresion
-
-    regressionLabel = tk.Label(frame, text='Salidas de la regresión:', bg='#faf9f9')
-    varOutputRegressionLenght = tk.IntVar()
-    varOutputRegressionDiameter = tk.IntVar()
-    varOutputRegressionHeight = tk.IntVar()
-    varOutputRegressionWholeWeight = tk.IntVar()
-    varOutputRegressionShuckedWeight = tk.IntVar()
-    varOutputRegressionVisceraWeight = tk.IntVar()
-    varOutputRegressionShellWeight = tk.IntVar()
-    varOutputRegressionRings = tk.IntVar()
-
-    chkbtnOutputRegressionLenght = tk.Checkbutton(frame, text=' Longitud', bg='#faf9f9', highlightbackground = '#faf9f9', activebackground='#faf9f9', variable=varOutputRegressionLenght, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionDiameter = tk.Checkbutton(frame, text=' Diametro', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionDiameter, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionHeight = tk.Checkbutton(frame, text=' Altura', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionHeight, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionWholeWeight = tk.Checkbutton(frame, text=' Peso completo', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionWholeWeight, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionShuckedWeight = tk.Checkbutton(frame, text=' Peso de la concha', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionShuckedWeight, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionVisceraWeight = tk.Checkbutton(frame, text=' Peso de la víscera', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionVisceraWeight, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionShellWeight = tk.Checkbutton(frame, text=' Peso del caparazón', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionShellWeight, onvalue=1, offvalue=0)
-    chkbtnOutputRegressionRings = tk.Checkbutton(frame, text=' Número de anillos', highlightbackground = '#faf9f9', activebackground='#faf9f9', bg='#faf9f9', variable=varOutputRegressionRings, onvalue=1, offvalue=0)
-
-    # Definicion del boton de realizar la regresion
+    # Definicion del boton de realizar el resumen estadistico
     
-    btnregression = tk.Button(frame, text='Obtener regresión', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
+    btnsummary = tk.Button(frame, text='Resumen estadístico', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', font=('Segoe UI', 10))
 
     # Definicion del boton de graficar
 
-    btngraph = tk.Button(frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2')
+    btngraph = tk.Button(frame, text='Graficar', activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', font=('Segoe UI', 10))
 
     def __init__(self):
         super().__init__()
@@ -178,55 +135,38 @@ class main():
         self.btnAtypical.grid(row=5, column=3, pady=15)
         self.btnAtypical.config(command=self.removeAtypics)
 
-        # Variables de entrada y campos de seleccion para la regresion - Ubicacion en el grid
-
-        self.regressionLabel.grid(row=6, column=0, sticky='W')
-
-        self.chkbtnInputRegressionLenght.grid(row=6, column=1, sticky='W')
-        self.chkbtnInputRegressionDiameter.grid(row=6, column=2, sticky='W')
-        self.chkbtnInputRegressionHeight.grid(row=6, column=3, sticky='W')
-        self.chkbtnInputRegressionWholeWeight.grid(row=7, column=1, sticky='W')
-        self.chkbtnInputRegressionShuckedWeight.grid(row=7, column=2, sticky='W')
-        self.chkbtnInputRegressionVisceraWeight.grid(row=7, column=3, sticky='W')
-        self.chkbtnInputRegressionShellWeight.grid(row=8, column=1, sticky='W', pady=(0,15))
-        self.chkbtnInputRegressionRings.grid(row=8, column=2, sticky='W', pady=(0,15))
-
-        # Variables de salida y campos de seleccion para la regresion - Ubicacion en el grid
-
-        self.regressionLabel.grid(row=9, column=0, sticky='W')
-        self.chkbtnOutputRegressionLenght.grid(row=9, column=1, sticky='W')
-        self.chkbtnOutputRegressionDiameter.grid(row=9, column=2, sticky='W')
-        self.chkbtnOutputRegressionHeight.grid(row=9, column=3, sticky='W')
-        self.chkbtnOutputRegressionWholeWeight.grid(row=10, column=1, sticky='W')
-        self.chkbtnOutputRegressionShuckedWeight.grid(row=10, column=2, sticky='W')
-        self.chkbtnOutputRegressionVisceraWeight.grid(row=10, column=3, sticky='W')
-        self.chkbtnOutputRegressionShellWeight.grid(row=11, column=1, sticky='W')
-        self.chkbtnOutputRegressionRings.grid(row=11, column=2, sticky='W')
-
         # Definicion del comando a ejecutar para el boton de realizar la regresion y ubicacion en el grid
 
-        self.btnregression.grid(row=12, column=1, sticky='WE', padx=5, pady=10)
+        self.btnsummary.grid(row=6, column=1, sticky='WE', padx=5, pady=10)
+        self.btnsummary.config(command=self.summary)
 
         # Definicion del comando a ejecutar para el boton de graficar y bicacion en el grid
 
-        self.btngraph.grid(row=12, column=2, sticky='WE', padx=5, pady=10)
+        self.btngraph.grid(row=6, column=2, sticky='WE', padx=5, pady=10)
         self.btngraph.config(command=self.graph)
 
     # Metodo de generacion de ventana emergente para mostrar alertas u errores
 
-    def errorWindow(self, title, message):
+    def newWindow(self, title, message):
+
+        # Creacion de la nueva ventana
+
         newgraphWindow = tk.Toplevel(self.root)
         newgraphWindow.resizable(False, False)
         newgraphWindow.title(title)
         
+        # Creacion de la figura a graficar
+
         frame = tk.Frame(newgraphWindow, width='1080', height='650')
         frame.pack()
         frame['bg'] = '#faf9f9' 
         
+        # Creacion del encabezado y el boton de cerrar de la ventana
+
         lbl = tk.Label(frame, text=message, bg='#faf9f9', font=(16))
         lbl.grid(row=0)
-        
-        btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy())
+    
+        btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy(), font=('Segoe UI', 10))
         btnClose.grid(row=1, pady=10)
     
     # Metodo de identificacion de las variables seleccionadas
@@ -257,19 +197,41 @@ class main():
 
     def graph(self):
         
+        # Creacion de la nueva ventana de graficacion
+
+        newgraphWindow = tk.Toplevel(self.root)
+        newgraphWindow.resizable(False, False)
+        
+        frame = tk.Frame(newgraphWindow)
+        frame.pack()
+        frame['bg'] = '#faf9f9'
+        
+        # Creacion de la figura a graficar
+
+        f = Figure(figsize=(5,4), dpi=100)
+        canvas = FigureCanvasTkAgg(f, master=frame)
+        plot = f.gca()
+
+        # Obtencion de los campos de entrada a traves de la interfaz
 
         selectedInput = self.checkSelectedInput()
         incoherence = False
+        graphType = self.comboGraphs.get()
+        subtitle = ''
+
+        # Realizacion de la grafica segun el tipo
 
         if (len(selectedInput) == 1):
 
-            if (self.comboGraphs.get() == 'Histograma'):
+            subtitle = str(selectedInput[0])
+
+            if (graphType == 'Histograma'):
                 plot.hist(self.dataSetObject.data[selectedInput[0]])
 
-            elif (self.comboGraphs.get() == 'Diagrama de caja'):
+            elif (graphType == 'Diagrama de caja'):
                 plot.boxplot(self.dataSetObject.data[selectedInput[0]])
 
-            elif (self.comboGraphs.get() == 'Normalización'):
+            elif (graphType == 'Normalización'):
                 graph = plot.figure()
                 ax = graph.add_subplot(111)
                 stats.probplot(self.dataSetObject.data[selectedInput[0]], dist=stats.norm, sparams=(6,), plot=ax)
@@ -279,25 +241,42 @@ class main():
 
         elif (len(selectedInput) == 2):
 
-            if (self.comboGraphs.get() == 'Dispersión'):
+            if (graphType == 'Dispersión'):
                 plot.scatter(self.dataSetObject.data[selectedInput[0]], self.dataSetObject.data[selectedInput[1]])
+                subtitle += ' - ' + str(selectedInput[1])
 
             else:
                 incoherence = True
-    
+
+        else:
+
+            incoherence = True
+
         if incoherence == True:
-            self.errorWindow('Error',f'Recuerda, para realizar un histograma, un diagrama de caja o un gráfico de normalización se requiere \n únicamente que tengas una variable de entrada seleccionada, pero, para realizar un gráfico de dispersión \n se requiere que tengas dos variables de entrada seleccionadas.')
+            self.newWindow('Error','Recuerda, para realizar un histograma, un diagrama de caja o un gráfico de normalización se requiere \n únicamente que tengas una variable de entrada seleccionada, pero, para realizar un gráfico de dispersión \n se requiere que tengas dos variables de entrada seleccionadas.')
             return
 
-        plot.title(self.comboGraphs.get())
-        plot.xlabel('Valor de los datos')
-        plot.ylabel('Cantidad de los datos')
-        plot.show()
+        # Creacion del encabezado, subtitulo y el boton de cerrar de la ventana
 
-    # Metodo para eliminar los datos atipicos
+        lbl = tk.Label(frame, text=graphType, bg='#faf9f9', font=('Segoe UI', 18, 'bold'))
+        lbl.grid(row=0, column=1, columnspan=2, sticky='WE', pady=5)
+
+        lbl = tk.Label(frame, text=subtitle, bg='#faf9f9', font=('Segoe UI', 12))
+        lbl.grid(row=1, column=1, columnspan=2, sticky='WE', pady=1)
+    
+        btnClose = tk.Button(frame, text="Cerrar", activeforeground='#faf9f9', activebackground='#555B6E', fg='#faf9f9', bg='#555B6E', cursor='hand2', command=lambda: newgraphWindow.destroy(), font=('Segoe UI', 10))
+        btnClose.grid(row=5, column=2 ,pady=10, sticky='W')
+
+        # Muestra de la grafica en la ventana
+
+        canvas.get_tk_widget().grid(row=2, column=1, rowspan=3, columnspan=2)
+
+    # Metodo para eliminar y restaurar los datos atipicos
     
     def removeAtypics(self):
         
+        # Eliminacion de datos atipicos
+
         if (self.btnAtypical['text'] == 'Eliminar atípicos'):
 
             alpha = self.atypicalInput.get()
@@ -315,21 +294,23 @@ class main():
                     minlimits.append(q25 - (float(alpha) * intr_qr))
 
                 self.dataSetObject.data = self.dataSetObject.copyData[(self.dataSetObject.copyData['Length'] < maxlimits[0]) & (self.dataSetObject.copyData['Length'] > minlimits[0]) & (self.dataSetObject.copyData['Diameter'] < maxlimits[1]) & (self.dataSetObject.copyData['Diameter'] > minlimits[1]) & (self.dataSetObject.copyData['Height'] < maxlimits[2]) & (self.dataSetObject.copyData['Height'] > minlimits[2]) & (self.dataSetObject.copyData['Whole weight'] < maxlimits[3]) & (self.dataSetObject.copyData['Whole weight'] > minlimits[3]) & (self.dataSetObject.copyData['Shucked weight'] < maxlimits[4]) & (self.dataSetObject.copyData['Shucked weight'] > minlimits[4]) & (self.dataSetObject.copyData['Viscera weight'] < maxlimits[5]) & (self.dataSetObject.copyData['Viscera weight'] > minlimits[5]) & (self.dataSetObject.copyData['Shell weight'] < maxlimits[6]) & (self.dataSetObject.copyData['Shell weight'] > minlimits[6]) & (self.dataSetObject.copyData['Rings'] < maxlimits[7]) & (self.dataSetObject.copyData['Rings'] > minlimits[7])]
-                self.errorWindow('Solicitud exitosa', 'La remosión de los datos atípicos se ha realizado de manera exitosa')
+                self.newWindow('Solicitud exitosa', 'La remosión de los datos atípicos se ha realizado de manera exitosa')
                 self.btnAtypical['text'] = 'Restaurar atípicos'
 
             except:
-                self.errorWindow('Error','Ups, algo ha salido mal, revisa que el valor de alpha sea valido')
+                self.newWindow('Error','Ups, algo ha salido mal, revisa que el valor de alpha sea valido')
                 return
+
+        # Restauracion de los datoos atipicos
 
         else:
 
             self.dataSetObject.data = self.dataSetObject.copyData.copy()
-            self.errorWindow('Solicitud exitosa', 'La restauración de los datos atípicos se ha realizado de manera exitosa')
+            self.newWindow('Solicitud exitosa', 'La restauración de los datos atípicos se ha realizado de manera exitosa')
             self.btnAtypical['text'] = 'Eliminar atípicos'
         
 
-        self.atypicalInput.delete(0,END)
+        self.atypicalInput.delete(0,tk.END)
 
 # Llamado a la accion de la aplicacion
 
