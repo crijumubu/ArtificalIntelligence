@@ -27,7 +27,7 @@ class main():
 
     # Titulo principal
 
-    title = tk.Label(frame, text='Abalone Data Analysys', bg='#faf9f9', font=('Segoe UI', 18, 'bold'))
+    title = tk.Label(frame, text='Abalone Artificial Intelligence', bg='#faf9f9', font=('Segoe UI', 18, 'bold'))
 
     # Despliegue del tipo de graficas
 
