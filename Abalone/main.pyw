@@ -17,7 +17,7 @@ class main():
     
     # Importacion del dataset del abalone mediante la creacion de un objeto de la clase DataSet
 
-    dataSetObject = ds.dataSet('Abalone/abalone.csv')
+    dataSetObject = ds.dataSet('abalone.csv')
     dataSetObject.setColums(["Sex", "Length", "Diameter", "Height", "Whole weight", "Shucked weight", "Viscera weight", "Shell weight", "Rings"])
 
     # Definicion del root y del frame
@@ -221,9 +221,10 @@ class main():
 
         # Realizacion de la grafica segun el tipo
 
+        subtitle = str(selectedInput[0])
+
         if (len(selectedInput) == 1):
 
-            subtitle = str(selectedInput[0])
 
             if (graphType == 'Histograma'):
                 plot.hist(self.dataSetObject.data[selectedInput[0]])
